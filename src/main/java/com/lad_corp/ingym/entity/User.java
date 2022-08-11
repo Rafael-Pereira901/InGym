@@ -1,7 +1,9 @@
 package com.lad_corp.ingym.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,15 +14,23 @@ public class User implements Serializable {
 	
 	@Id
 	private String id;
-	private String name;
+	private String username;
 	private String email;
+	private String password;
+	
+	private UtilInfo utilInfo;
+	
+	private Set<Workout> workouts= new HashSet<>();
 	
 	public User() {}
-	
-	public User(String id, String name, String email) {
+
+	public User(String id, String username, String email, String password, UtilInfo utilInfo) {
+		super();
 		this.id = id;
-		this.name = name;
+		this.username = username;
 		this.email = email;
+		this.password = password;
+		this.utilInfo = utilInfo;
 	}
 
 	public String getId() {
@@ -31,12 +41,12 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getEmail() {
@@ -45,6 +55,26 @@ public class User implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public UtilInfo getUtilInfo() {
+		return utilInfo;
+	}
+
+	public void setUtilInfo(UtilInfo utilInfo) {
+		this.utilInfo = utilInfo;
+	}
+
+	public Set<Workout> getWorkouts() {
+		return workouts;
 	}
 
 	@Override
@@ -63,6 +93,10 @@ public class User implements Serializable {
 		User other = (User) obj;
 		return Objects.equals(id, other.id);
 	}
+	
+	
+	
+	
 	
 	
 	
