@@ -1,4 +1,4 @@
-package com.lad_corp.ingym.controller;
+
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lad_corp.ingym.payload.UserDTO;
+import com.lad_corp.ingym.entity.User;
 import com.lad_corp.ingym.service.UserService;
 
 @RestController
@@ -27,23 +27,23 @@ public class UserController {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<UserDTO>> getAllUsers() {
-		return new ResponseEntity<List<UserDTO>>(userService.getAllUsers(),HttpStatus.OK);
+	public ResponseEntity<List<User>> getUserById() {
+		return new ResponseEntity<>(userService.getAllUsers(),HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO userDto){
-		return new ResponseEntity<UserDTO>(userService.createUser(userDto), HttpStatus.CREATED);
+	public ResponseEntity<User> createUser(@RequestBody User user){
+		return new ResponseEntity<>(userService.createUser(user), HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<UserDTO> getUserByid(@PathVariable(name ="id") Long id){
-		return new ResponseEntity<UserDTO>(userService.getUserByid(id),HttpStatus.OK);
+	public ResponseEntity<User> getUserByid(@PathVariable(name ="id") Long id){
+		return new ResponseEntity<>(userService.getUserByid(id),HttpStatus.OK);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<UserDTO> updatePost( @RequestBody UserDTO userDto, @PathVariable(name="id") Long id){
-		return new ResponseEntity<UserDTO>(userService.updateUser(userDto, id), HttpStatus.OK);
+	public ResponseEntity<User> updatePost( @RequestBody User user, @PathVariable(name="id") Long id){
+		return new ResponseEntity<User>(userService.updateUser(user, id), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")

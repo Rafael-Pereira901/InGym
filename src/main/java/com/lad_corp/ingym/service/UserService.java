@@ -1,50 +1,62 @@
 package com.lad_corp.ingym.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import com.lad_corp.ingym.entity.User;
+import com.lad_corp.ingym.payload.UserDTO;
 import com.lad_corp.ingym.repository.UserRepository;
 
 @Service
 public class UserService {
 
 	private UserRepository userRepository;
+	private ModelMapper mapper;
 	
-	@Autowired 
-	public UserService(UserRepository userRepository) {
+	public UserService(UserRepository userRepository, ModelMapper mapper) {
 		this.userRepository = userRepository;
+		this.mapper = mapper;
 	}
 	
-	public User createUser(User user) {
+	public UserDTO createUser(UserDTO userDto) {
+		User user = mapToEntity(userDto);
 		userRepository.save(user);
-		return user;
+		UserDTO newUser = mapToDTO(user);
+		return newUser;
 	}
 	
-	public List<User> getAllUsers() {
+	public List<UserDTO> getAllUsers() {
 		List<User> users = userRepository.findAll();
-		return users;
+		List<UserDTO> usersDTO = users.stream().map(user -> mapToDTO(user)).collect(Collectors.toList());
+		return usersDTO;
 	}
 
-	public User getUserByid(String id) {
+	public UserDTO getUserByid(Long id) {
 		User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalide user id!"));
-		return user;
+		return mapToDTO(user);
 	}
 
-	public User updateUser(User updatedUser, String id) {
+	public UserDTO updateUser(UserDTO userDto, Long id) {
 		User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalide user id!"));
-		user.setUsername(updatedUser.getUsername());
-		user.setEmail(updatedUser.getEmail());
-		user.setUtilInfo(updatedUser.getUtilInfo());
-		return userRepository.save(user);
+		user.setUsername(userDto.getUsername());
+		user.setEmail(userDto.getEmail());
+		return mapToDTO(userRepository.save(user)); 
 	}
 
-	public void deleteUserById(String id) {
+	public void deleteUserById(Long id) {
 		User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalide user id!"));
 		userRepository.delete(user);
 	}
+	
+	private UserDTO mapToDTO(User user) {
+		return mapper.map(user, UserDTO.class);
+	}
 
+	private User mapToEntity(UserDTO dto) {
+		return mapper.map(dto, User.class);
+	}
 	
 }

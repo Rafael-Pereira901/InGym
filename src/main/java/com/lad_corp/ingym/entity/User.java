@@ -1,36 +1,49 @@
 package com.lad_corp.ingym.entity;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
-@Document(collection = "users")
-public class User implements Serializable {
-	private static final long serialVersionUID = 1L;
+import org.springframework.data.annotation.Id;
+
+@Table(
+		name = "posts",
+		uniqueConstraints = {@UniqueConstraint(columnNames = {"id"})}
+)
+public class User {
+	
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String id;
+	
+	@Column(nullable = false)
 	private String username;
+	
+	@Column(nullable = false)
 	private String email;
+	
+	@Column(nullable = false)
 	private String password;
 	
-	private UtilInfo utilInfo;
-	
+	@OneToMany(mappedBy = "user", cascade =  CascadeType.ALL, orphanRemoval = true)
 	private Set<Workout> workouts= new HashSet<>();
 	
 	public User() {}
 
-	public User(String id, String username, String email, String password, UtilInfo utilInfo) {
-		super();
+	public User(String id, String username, String email, String password) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.utilInfo = utilInfo;
 	}
 
 	public String getId() {
@@ -63,14 +76,6 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public UtilInfo getUtilInfo() {
-		return utilInfo;
-	}
-
-	public void setUtilInfo(UtilInfo utilInfo) {
-		this.utilInfo = utilInfo;
 	}
 
 	public Set<Workout> getWorkouts() {
